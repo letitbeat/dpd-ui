@@ -1,0 +1,11 @@
+language:
+- go
+services:
+- docker
+before_install:
+- make dbuild
+install:
+- make release
+env:
+  matrix:
+    secure: CKkEuingfPi6Kc9+95KBwr/eys04WnasZWW7N3D4eI1av01xnGfsC2MHu7TH5ENTqqzDh6B3DY0rDLBA96QyziO4w0mMJoB95ns25BNaHJYFj1V1po5Rdz2/KR/3k6KK0/TfamF8ik+bon/dmrQilGCoa3VoEsOEZVtlkLSADyPVMTZGV6ctVUxHsEFrVRxySR/MgTZ4SzeT+r2H1wm4OMgXS2ioGrHlNSzD2je1lhRLrwCSu5CROng+yX93eoa6u/S2u/FApyfW5PLCBaRpvMOEyX7hPfeobyzt/as83xFhR9supVDOnPNb/+iDRobUP2IxuKjGyzZOtf+25YH2i8ua0qsB7k7Hc0TeJFbUhwFXDGhOeDCSRTZRlzsblNcWQq32oc9VmNyTtszp7E2kba8L3p9VvXdYJzUDkoWSp2oa8Qh+GdeLBInWx91zMpKwwN5FYCtS+ktRsyhxfJV6Q0chexsoxbOP2cvGosPAf0rNBsSQ/pAIIiVR3wT/XtFBXN5l/fByZenD3ux6XHy+H60S2aow9G/je6r9ZGf78AXyDzTNwxx6J0pZ6y20zMG5/NAZiFRiEwtl77F0B3XHg2Y3izZhOXY5GBt6w8xXQv0OKjkHeQCPJ6JuIFWxzzF4x+s6S3OgRrQvG9t8G7rzQjeDhJ9C6rCe64bxYUTyuIA=
