@@ -20,8 +20,6 @@ function init() {
                 date.setTime(tree.captured_at/1000000);
                 let dateString = date.toUTCString();
 
-                console.log("Tree level: " + tree.level);
-
                 let key = ""+ tree.type + tree.dst_port + date.getMonth() + date.getDay() + date.getHours() + date.getMinutes() + date.getSeconds();
 
                 let l = additionalTrees[key];
@@ -35,9 +33,15 @@ function init() {
                 if (tree.level < 3) {
                     //return
                 } else {
+                    
+                    let sat = $('<span data-feather="x" style="color:#cc0000;width:24px;height:24px"></span>')
+                    if (tree.is_sat) {
+                        sat = $('<span data-feather="check" style="color:#009900;width:24px;height:24px"></span>')
+                    }
+
                     let label = $("<p></p>")
-                    // .html(`<b>Captured At:</b>${dateString}<br/><b>PID:</b>${tree.id}<br/><b>Type:</b>${tree.type} <b>Src IP:</b>${tree.src_ip}<br/><b>Dst Port:</b>${tree.dst_port}`);
-                        .html(`<b>Captured At:</b>${dateString}<br/><b>PID:</b>${tree.id}<br/><b>Src IP:</b>${tree.src_ip}`);
+                        .html(`<b>Captured At:</b>${dateString}<br/><b>Dst IP:</b>${tree.dst_ip}<br/><b>Valid:</b>`)
+                        .append(sat);
 
                     let t = $("<div></div>")
                         .addClass("col-md-3")
@@ -73,6 +77,9 @@ function init() {
 
             });
         })
+        .then(function (response){
+            feather.replace();
+        })
         .catch(error => {
             console.log("Fetching trees data failed", error);
             $("#tree-container").append("<p></p>").text("No flow tree data.");
@@ -83,7 +90,7 @@ function init() {
 
 
 function getTopology() {
-    fetch('http://localhost:5000/topo')
+    fetch('http://localhost:5000/topology')
         .then(function (response) {
             return response.json();
         })
@@ -98,6 +105,19 @@ function getTopology() {
             //});
         })
         .catch(error => console.log("Fetching topology failed", error))
+}
+
+function getProperties() {
+    fetch('http://localhost:5000/smt')
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (json) {
+            props = json;
+            let modal = $("#propertiesModal");
+            modal.find('.modal-body textarea').val(props.text);
+        })
+        .catch(error => console.log("Fetching properties failed", error))
 }
 
 function handleErrors(response) {
@@ -199,7 +219,46 @@ $('#viewMoreModal').on('show.bs.modal', function (event) {
         });
 });
 
+$("#btnSaveProperties").click(
+    function () {
+        $("#saveResult").empty();
+        $("saveLoader").removeClass("d-none");
+
+        let url = `http://localhost:5000/smt`;
+        let modal = $("#propertiesModal");
+        let text = modal.find('.modal-body textarea').val();
+        let data = {text:text}
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            // headers:{
+            //     'Content-Type': 'application/json'
+            // }
+        })
+        .then(handleErrors)
+        .then(res => res.json())
+        .then(res => {
+            $("saveLoader").addClass("d-none");
+
+            let label = $("<div class=\"alert alert-primary\" role=\"alert\"></div>").text(`Properties saved successfully`)
+
+            $("#saveResult").append(label);
+            console.log("save properties: " + JSON.stringify(res));
+        })
+        .then(function (){
+            init();
+        })
+        .catch(error => {
+            let label = $("<div class=\"alert alert-danger\" role=\"alert\"></div>").text(`There was an error saving properties: ${error.message}`)
+            $("#saveResult").append(label);
+            console.error('Error saving properties:', error)
+        });
+    
+    }
+)
+
 $(function () {
     getTopology();
+    getProperties();
     init();
 });

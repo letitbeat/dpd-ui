@@ -7,13 +7,10 @@
 	<title>Flow Tree Visualizer</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 
-<!--	<link rel="stylesheet" href="../css/Treant.css"> -->
-
 	<link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/custom.css">
 
-<!--	<link rel="stylesheet" href="super-simple.css"> -->
-	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+	<!-- <script src="https://code.jquery.com/jquery-1.10.2.js"></script> -->
 </head>
 <body>
 	<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
@@ -40,6 +37,12 @@
                         <a class="nav-link" href="#" data-toggle="modal" data-target="#generateModal">
                             <span data-feather="file"></span>
                             Generate
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-toggle="modal" data-target="#propertiesModal">
+                            <span data-feather="check-circle"></span>
+                            Properties to Verify
                         </a>
                     </li>
 				</ul>
@@ -122,6 +125,54 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Properties -->
+    <div class="modal fade" id="propertiesModal" tabindex="-1" role="dialog" aria-labelledby="propertiesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: 800px">
+                <div class="modal-header d-block">
+                    <h5 class="modal-title text-center" id="propertiesModalLabel">Properties to Verify</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <label for="properties" class="col-form-label">Properties:</label>
+                        <textarea class="form-control" id="properties" rows="15" cols="90">
+(assert
+    (forall ((x Int))
+        (=> 
+        (and 
+            (>= x 1)
+            (<= x paths_size) ;; for the range 1<=x<=paths_size (for all declared paths)
+        )
+        (exists ((y Int))
+            (and 
+            (>= y 1)
+            (<= y hosts_size)
+            (= 
+                (second (select (select paths x) (select paths_length x))) 
+                (select hosts y)
+            )
+            )
+        )
+        ) 
+    )
+)
+                        </textarea>
+                    </form>
+                    <div id="saveResult"></div>
+                    <div class="row mx-auto">
+                        <div id="saveLoader" class="save-loader d-none"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveProperties">Save</button>
                 </div>
             </div>
         </div>
