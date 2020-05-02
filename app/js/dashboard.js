@@ -226,8 +226,8 @@ $("#btnSaveProperties").click(
     function () {
         $("#saveResult").empty();
         $("saveLoader").removeClass("d-none");
-
-        let url = `http://localhost:5000/smt`;
+        let hostname = getHostname();
+        let url = `http://${hostname}:5000/smt`;
         let modal = $("#propertiesModal");
         let text = modal.find('.modal-body textarea').val();
         let data = {text:text}
