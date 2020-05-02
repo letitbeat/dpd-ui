@@ -6,7 +6,7 @@ function init() {
 
     $("#tree-container").empty();
 
-    fetch('http://localhost:5000/')
+    fetch('http://'+getHostname()+':5000/')
         .then(function (response) {
             return response.json();
         })
@@ -88,9 +88,12 @@ function init() {
         });
 }
 
+function getHostname() {
+    return window.location.hostname;
+}
 
 function getTopology() {
-    fetch('http://localhost:5000/topology')
+    fetch('http://'+getHostname()+':5000/topology')
         .then(function (response) {
             return response.json();
         })
@@ -108,7 +111,7 @@ function getTopology() {
 }
 
 function getProperties() {
-    fetch('http://localhost:5000/smt')
+    fetch('http://'+getHostname()+':5000/smt')
         .then(function (response) {
             return response.json();
         })
@@ -161,8 +164,8 @@ $("#btnGenerate").click(
         let data = {expression: expression};
         let port = 8800;
         topology.hosts.forEach(function (e) {
-
-            let url = `http://localhost:${port}/generate`;
+            let hostname = getHostname();
+            let url = `http://${hostname}:${port}/generate`;
 
             fetch(url, {
                 method: 'POST',
